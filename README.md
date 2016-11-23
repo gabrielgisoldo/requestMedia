@@ -51,9 +51,9 @@ The code would be something like this:
 webcam = new requestWebcam(video_in, video_out)
 ```
 
-## Requesting access to webcam
+## Request access to webcam
 
-After creating an instance of the onject, you can request access to the webcam like this:
+After creating an instance of the object, you can request access to the webcam like this:
 
 ```JavaScript
 webcam.requestWebcam()
@@ -62,16 +62,72 @@ webcam.requestWebcam()
 You can pass two parameters to this functions:
     
 ### success
-it must be a function. This function will be called if the user grants access.
+It must be a function. This function will be called if the user grants access.
 
 ### error
-it must be a function. This function will be called in case of error or in case the user does not grant permission. It can be an function like this ```JavaScript function() { //do something};``` or ```JavaScript function(e) {//do something with the error info}```
+It must be a function. This function will be called in case of error or in case the user does not grant permission. It can be an function like this:
+
+```JavaScript
+function() {
+    //do something
+}
+```
+Or:
+
+```JavaScript
+function(e) {
+    //do something with the error info
+}
+```
+
+After getting the permissions, if you have passed something on the paramenter video_in on the constructor, the feed will be displayed on the element with the respective ID.
     
 ## Recording the feed
 
+After getting permission from the user, you can record the feed. This is done using the function:
 
-    
-    
-    
-    
-    
+```JavaScript
+webcam.startRecording()
+```
+## Stop the recording
+
+To stop the recording, you just need to call the function:
+
+```JavaScript
+webcam.stopRecording()
+```
+
+This function can receive a function by parameter and execute it after stoping the recorder.
+The code would be like this:
+
+```JavaScript
+function f() {
+    //do something
+};
+webcam.startRecording(f);
+```
+At this point, if we have passed something on the paramenter video_out on the constructor, the video recorded will be displayed on the element with the respective ID.
+
+## Download the video recorded
+
+You can also download the video after recording it. To do it, just use this code:
+
+```JavaScript
+webcam.Download()
+```
+
+## Forgetting permission access
+
+After you get access to the hardware, unless the user go to another page or reload the page using the feed, the browser will keep the connection with the webcam/microphone open. This function is used to close the connection and forget the permission you got. The call is done like this:
+
+```JavaScript
+webcam.forgetPermission();
+```
+You can pass a function by parameter too. This function will be executed after removing all permissions the user granted before.
+
+```JavaScript
+funtion f(){
+    //do something
+}
+webcam.forgetPermission(f);
+```
