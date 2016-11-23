@@ -1,28 +1,28 @@
-/**
-Classe JS para solicitar acesso a webcam e microfone do usuario a partir do browser.
+/*
+JS object to request access to the webcam and microphone of the user on the browser.
 
-Compativel com:
+Can be used on:
     Desktop:
-        Firefox
-        Google Chrome - com permissao para usar os pacotes experimentais
-        Google Chromium - com permissao para usar os pacotes experimentais
-        Opera
+        Firefox;
+        Google Chrome - with experimental packages permission;
+        Chromium - with experimental packages permission;
+        Opera;
 
     Mobile:
-        Firefox - Android
-        Google Chrome - Android
-        Browser Padrão - Android
-**/
-
+        Firefos - Android;
+        Google Chrome - Android;
+        Default browser - Android;
+*/
 
 function requestWebcam(video_in, video_out){
-    /**
-    Construtor da classe.
+    /*
+    Constructor of the object.
 
-    Recebe como parametro o ID de um elemento HTML de video(<video>) para saida e para entrada.
+    video_in: receive the ID of an element(<video>) to display the webcam feed after getting permission.
 
-    O elemento do primeiro ID recebe a stream e o segundo elemento recebe o video gravado.
-    **/
+    video_out: receive the ID of an element(<video>) to display the recorded file.
+    */
+
     this.video_in = video_in || null;
     this.video_out = video_out || null;
     this.data_array = [];
@@ -33,62 +33,80 @@ function requestWebcam(video_in, video_out){
 }
 
 requestWebcam.prototype.getVideo_in = function() {
+    /*return the value of Video_in.*/
+
     return this.video_in;
 };
 
 requestWebcam.prototype.getVideo_out = function() {
+    /*return the value of Video_out.*/
+
     return this.video_out;
 };
 
 requestWebcam.prototype.getData_array = function() {
+    /*return the value of Data_array.*/
+
     return this.data_array;
 };
 
 requestWebcam.prototype.getStream = function() {
+    /*return the value of Stream.*/
+
     return this.stream;
 };
 
 requestWebcam.prototype.getRecorder = function() {
+    /*return the value of Recorder.*/
+
     return this.recorder;
 };
 
 requestWebcam.prototype.getBlob = function() {
+    /*return the value of Blob.*/
+
     return this.blob;
 };
 
 requestWebcam.prototype.forgetPermission = function(f) {
-    /**
-    Retira a permissao do script de acessar a webcam e microfone.
+    /*
+    Forget the permission given by the user to access the webcam and microphone
 
-    Opcional:
-    Recebe um funcao por parametro para executar depois de retirar as permissoes.
-    **/
+    Optional:
+    Receive a function by parameter to execute after getting permission.
+    */
+
     for (var i = 0; i < this.stream.getTracks().length; i++) {
         this.stream.getTracks()[i].stop();
     }
     if (f && typeof f === 'function'){
+        //Case we have received a function on parameter, we execute it after forgeting all permissions.
         f();
     }
 }
 
 requestWebcam.prototype.requestPermission = function(f) {
-    /**
-    Solicita ao usuario a permissao para acessar o microfone e a webcam.
+    /*
+    Request permission from the user to access the microphone and webcam.
 
-    Opcional:
-    Recebe uma funcao por parametro para executar depois de conseguir o objeto LocalMediaStream.
-    **/
+    Optional:
+    Receive a function by parameter to execute after getting permission.
+
+    TODO: Make possible to request only video or only audio; Exception/Error Handling;
+    */
+
     var that = this;
     navigator.mediaDevices.getUserMedia(
-        {video: true,audio: true}
+        {video: true, audio: true}
     ).then(
         function(stm) {
             that.stream = stm;
-            // Caso tenha recebido o parametro video_in ele insere o feed da webcam como source no elemento html(<video>).
             if (that.video_in) {
+                // Case we have received video_in, we display the webcam feed on the html element(<video>) with id equal to video_in.
                 document.getElementById(that.video_in).src = URL.createObjectURL(that.stream);
             }
             if (f && typeof f === 'function'){
+                //Case we have received a function on parameter, we execute it after the user grants permission.
                 f();
             }
         }
@@ -98,18 +116,21 @@ requestWebcam.prototype.requestPermission = function(f) {
 };
 
 requestWebcam.prototype.startRecording = function() {
-    /**
-    Inicia a gravacao do feed da webcam.
+    /*
+    Start recording the webcam feed.
 
-    A variavel browser e usada para diferenciar entre Chrome e firefox/opera,
-    pois a funcao mediaRecorder se comporta de forma diferente no Chrome.
-    **/
+    The variable Browser is here to differentiate between Chrome and Firefox/Opera,
+    because the function mediaRecorder has a different behavior on Chrome.
+
+    TODO: accept an fuction on parameters; Exception/Error Handling;
+    */
+
     var that = this;
     if (this.browser.indexOf("Chrome") > -1) {
 
         that.recorder = new MediaRecorder(that.stream);
         that.recorder.start();
-        this.recorder.ondataavailable = function(e) {that.data_array.push(e.data)};
+        that.recorder.ondataavailable = function(e) {that.data_array.push(e.data)};
         
     } else if (that.browser.indexOf("Firefox") > -1 || that.browser.indexOf("Opera") > -1) {
 
@@ -125,39 +146,44 @@ requestWebcam.prototype.startRecording = function() {
 };
 
 requestWebcam.prototype.stopRecording = function(f) {
-    /**
-    Encerra a gravacao do feed da webcam.
+    /*
+    Stop the recording of the feed.
 
-    A variavel browser e usada para diferenciar entre Chrome e firefox/opera,
-    pois a funcao mediaRecorder se comporta de forma diferente no Chrome.
+    The variable browser is used to differentiate between Chrome and firefox/Opera,
+    because the function mediaRecorder has a different behavior on chrome.
 
-    Opcional:
-    Recebe uma funcao por parametro para executar depois de settar os novos
-    valores para as variaveis.
-    **/
+    Optional:
+    Receive a function on parameters to execute after stoping the recording.
+
+    TODO: Exception/Error Handling; Make possible to record only video or only audio;
+    */
+
     var that = this;
     if (that.browser.indexOf("Chrome") > -1) {
 
         that.recorder.stop();
         that.blob = new Blob(that.data_array, {'type' : 'video/mp4'});
         that.urlobj = URL.createObjectURL(that.blob);
-        //Caso tenha recebido o parametro video_out ele insere o video gravado como source no elemento html(<video>).
         if (that.video_out) {
-                document.getElementById(that.video_out).src = URL.createObjectURL(that.blob);
+            //In case we hava received video_out, this insert the recorded video on the element(<video>) with the id received in video_out.
+            document.getElementById(that.video_out).src = URL.createObjectURL(that.blob);
         }
-        if (f && f === 'function') {
-            f();
+        if (f && typeof f === 'function') {
+            //This timeout is here, just to make sure we execute the function after the recorder stoped.
+            setTimeout(f(), 500);
         }
         that.data_array = [];
 
     } else if (that.browser.indexOf("Firefox") > -1 || that.browser.indexOf("Opera") > -1) {
         that.recorder.ondataavailable = function(e) {
             that.urlobj = URL.createObjectURL(e.data);
+            that.blob = new Blob([e.data], {'type': 'video/mp4'});
             if (that.video_out) {
                 document.getElementById(that.video_out).src = URL.createObjectURL(e.data);
             }
-            if (f && f === 'function') {
-                f();
+            console.log(f);
+            if (f && typeof f === 'function') {
+                setTimeout(f(), 500);
             }
         };
         that.recorder.stop();
@@ -170,9 +196,36 @@ requestWebcam.prototype.stopRecording = function(f) {
         if (that.video_out) {
                 document.getElementById(that.video_out).src = URL.createObjectURL(that.blob);
         }
-        if (f && f === 'function') {
-            f();
+        if (f && typeof f === 'function') {
+            setTimeout(f(), 500);
         }
         that.data_array = [];
     }
+};
+
+requestWebcam.prototype.download = function() {
+    /*
+    Download the video recorded by the feed.
+
+    The first timeout is here just to make sure we have an blob on the blob variable after the recording.
+    The second timeout is to make sure the JS engine on the browser executed the .click() before we remove the element(<a>)
+    from the html.
+
+    TODO: Exception/Error Handling;
+    */
+
+    var that = this;
+    setTimeout(function(){
+        a = document.createElement('a');
+        a.style = "display: none";
+        a.download = ['video_', (new Date() + '').slice(4, 28), '.mp4'].join('');
+        a.href = that.urlobj;
+        a.textContent = a.download;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+        }, 900);
+    }, 1000);
 };
