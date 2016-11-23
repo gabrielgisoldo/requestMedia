@@ -61,8 +61,11 @@ webcam.requestWebcam()
 
 You can pass two parameters to this functions:
     
-    success: it must be a function. This function will be called if the user grants access.
-    error: it must be a function. This function will be called in case of error or in case the user does not grant permission. It can be an function like this ```JavaScript function() { //do something};``` or ```JavaScript function(e) {//do something with the error info}```
+### success
+it must be a function. This function will be called if the user grants access.
+
+### error
+it must be a function. This function will be called in case of error or in case the user does not grant permission. It can be an function like this ```JavaScript function() { //do something};``` or ```JavaScript function(e) {//do something with the error info}```
     
 ## Recording the feed
 
