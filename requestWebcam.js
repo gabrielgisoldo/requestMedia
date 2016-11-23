@@ -81,7 +81,7 @@ requestWebcam.prototype.forgetPermission = function(f) {
     }
     if (f && typeof f === 'function'){
         //Case we have received a function on parameter, we execute it after forgeting all permissions.
-        f;
+        f();
     }
 }
 
