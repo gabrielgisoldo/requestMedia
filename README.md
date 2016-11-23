@@ -104,7 +104,7 @@ The code would be like this:
 function f() {
     //do something
 };
-webcam.startRecording(f);
+webcam.stopRecording(f);
 ```
 At this point, if we have passed something on the paramenter video_out on the constructor, the video recorded will be displayed on the element with the respective ID.
 
