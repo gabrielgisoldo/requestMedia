@@ -73,7 +73,7 @@ requestWebcam.prototype.forgetPermission = function(f) {
     Forget the permission given by the user to access the webcam and microphone
 
     Optional:
-    Receive a function by parameter to execute after getting permission.
+    Receive a function by parameter to execute after removing all permissions.
     */
 
     for (var i = 0; i < this.stream.getTracks().length; i++) {
