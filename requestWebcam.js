@@ -9,7 +9,7 @@ Can be used on:
         Opera;
 
     Mobile:
-        Firefos - Android;
+        Firefox - Android;
         Google Chrome - Android;
         Default browser - Android;
 */
@@ -81,39 +81,36 @@ requestWebcam.prototype.forgetPermission = function(f) {
     }
     if (f && typeof f === 'function'){
         //Case we have received a function on parameter, we execute it after forgeting all permissions.
-        f();
+        f;
     }
 }
 
-requestWebcam.prototype.requestPermission = function(f) {
+requestWebcam.prototype.requestPermission = function(success, error) {
     /*
     Request permission from the user to access the microphone and webcam.
 
     Optional:
-    Receive a function by parameter to execute after getting permission.
+    success: Receive a function to execute after getting permission.
+    error: Receive a function to execute in case of error. This function may hava a parameter to receive info on the error.
 
-    TODO: Make possible to request only video or only audio; Exception/Error Handling;
+    TODO: Make possible to request only video or only audio;
     */
 
     var that = this;
-    navigator.mediaDevices.getUserMedia(
-        {video: true, audio: true}
-    ).then(
-        function(stm) {
-            that.stream = stm;
-            if (that.video_in) {
-                // Case we have received video_in, we display the webcam feed on the html element(<video>) with id equal to video_in.
-                document.getElementById(that.video_in).src = URL.createObjectURL(that.stream);
-            }
-            if (f && typeof f === 'function'){
-                //Case we have received a function on parameter, we execute it after the user grants permission.
-                f();
-            }
+    navigator.mediaDevices.getUserMedia({video: true, audio: true})
+    .then(function(stm) {
+        that.stream = stm;
+        if (that.video_in) {
+            /*Case we have received video_in, we display the webcam feed on the html element(<video>) with id equal to video_in.*/
+            document.getElementById(that.video_in).src = URL.createObjectURL(that.stream);
         }
-    ).catch(
-        function(e) {console.error(e)}
-    );
-};
+        if (success && typeof success === 'function') {
+            /*Case we have received a function on parameter, we execute it after the user grants permission.*/
+            success();
+        }
+    })
+    .then(null, error && typeof error === 'function' ? error : function (err) {console.log(err.name + ': ' + err.message);})
+}
 
 requestWebcam.prototype.startRecording = function() {
     /*
@@ -208,24 +205,21 @@ requestWebcam.prototype.download = function() {
     Download the video recorded by the feed.
 
     The first timeout is here just to make sure we have an blob on the blob variable after the recording.
-    The second timeout is to make sure the JS engine on the browser executed the .click() before we remove the element(<a>)
-    from the html.
 
     TODO: Exception/Error Handling;
     */
 
     var that = this;
+
+    a = document.createElement('a');
+    a.style = "display: none";
+    a.download = ['video_', (new Date() + '').slice(4, 28), '.mp4'].join('');
+    a.href = that.urlobj;
+    a.textContent = a.download;
+    document.body.appendChild(a);
+    a.click();
     setTimeout(function(){
-        a = document.createElement('a');
-        a.style = "display: none";
-        a.download = ['video_', (new Date() + '').slice(4, 28), '.mp4'].join('');
-        a.href = that.urlobj;
-        a.textContent = a.download;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function(){
-            document.body.removeChild(a);
-            URL.revokeObjectURL(a.href);
-        }, 900);
-    }, 1000);
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+    }, 900);
 };
