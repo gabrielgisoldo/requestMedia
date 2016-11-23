@@ -24,28 +24,29 @@ Add this code in the html you want to use this API:
     
 With requestWebcam.min.js:
 
-        '''html
-        <script src="/folder/where/the/file/is/requestWebcam.min.js" type="text/javascript"></script>
-        '''
+'''html
+<script src="/folder/where/the/file/is/requestWebcam.min.js" type="text/javascript"></script>
+'''
     
 With requestWebcam.js:
 
-        '''html
-        <script src="/folder/where/the/file/is/requestWebcam.js" type="text/javascript"></script>
-        '''
+'''html
+<script src="/folder/where/the/file/is/requestWebcam.js" type="text/javascript"></script>
+'''
         
 On your JS file is necessary to instantiate the object. Do it using this code:
 
-    '''JavaScript
-    webcam = new requestWebcam();
-    '''
+'''JavaScript
+webcam = new requestWebcam();
+'''
+
 This object can accept two parameters. You can pass the ID of the html element(<video>) you want the feed to be displayed and the ID of the html element(<video>) you want to display the video after recording it.
 
 The code would be somethig like this:
 
-    '''JavaScript
-    webcam = new requestWebcam(video_in, video_out);
-    '''
+'''JavaScript
+webcam = new requestWebcam(video_in, video_out);
+'''
     
     
     
