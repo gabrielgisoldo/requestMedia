@@ -14,17 +14,53 @@ Can be used on:
         Default browser - Android;
 */
 
-function requestWebcam(video_in, video_out){
-    /*
-    Constructor of the object.
+var defaults = {
+    video_in: null,
+    video_out: null,
+    name: ['video_', (new Date() + '').slice(4, 28), '.mp4'].join(''),
+    onGetPermission: function () {},
+    onForgetPermission: function () {},
+    onDeniedPermission: function (err) {console.log(err.name + ': ' + err.message)},
+    onStartRecording: function () {},
+    onStopRecording: function () {},
+    onDownload: function () {}
+}
 
-    video_in: receive the ID of an element(<video>) to display the webcam feed after getting permission.
+/*
+    @example
+        * var webcam = new requestWebcam({
+        *   video_in: document.getElementById( ... ),
+        *   video_out: document.getElementById( ... ),
+        *   name_video: 'Test.mp4',
+            onGetPermission: function () { ... },
+        *   onForgetPermission: function () { ... },
+        *   onDeniedPermission: function (err) { ... }
+        *   onStartRecording: function () { ... },
+        *   onStopRecording: function () { ... },
+        *   onDownload: function () { ... }
 
-    video_out: receive the ID of an element(<video>) to display the recorded file.
-    */
+        * })
+        * webcam.requestPermission()
 
-    this.video_in = video_in || null;
-    this.video_out = video_out || null;
+    * @constructor
+    * @param {object} options Hash of options
+    * @param {object} options.video_in video HTML5 element to display feed
+    * @param {object} options.video_out video HTML5 element to display final video
+    * @param {string} options.name_video name of video on download
+    * @param {function} [options.onGetPermission] callback when getting permission
+    * @param {function} [options.onForgetPermission] Execute after deleting the permissions
+    * @param {function} [options.onDeniedPermission] callback when not getting permission
+    * @param {function} [options.onStartRecording] execute after start recording
+    * @param {function} [options.onStopRecording] execute after stop recording
+    * @param {function} [options.onDownload] execute before download
+*/
+
+var requestWebcam = function(opts) {
+
+    /* copy user options or use default values */
+    for (var i in defaults) {
+        this[i] = (opts[i] !== undefined) ? opts[i] : defaults[i]
+    }
     this.data_array = [];
     this.stream = null;
     this.recorder = null;
@@ -42,6 +78,41 @@ requestWebcam.prototype.getVideo_out = function() {
     /*return the value of Video_out.*/
 
     return this.video_out;
+};
+
+requestWebcam.prototype.getName = function () {
+    /*return the value of name.*/
+    return this.name;
+};
+
+requestWebcam.prototype.getOnGetPermission = function () {
+    /*return the value of onGetPermission.*/
+    return this.onGetPermission;
+};
+
+requestWebcam.prototype.getOnForgetPermission = function () {
+    /*return the value of onForgetPermission.*/
+    return this.onForgetPermission;
+};
+
+requestWebcam.prototype.getOnDeniedPermission = function () {
+    /*return the value of onDeniedPermission.*/
+    return this.onDeniedPermission;
+};
+
+requestWebcam.prototype.getOnStartRecording = function () {
+    /*return the value of onStartRecording.*/
+    return this.onStartRecording;
+};
+
+requestWebcam.prototype.getOnStopRecording = function () {
+    /*return the value of onStopRecording.*/
+    return this.onStopRecording;
+};
+
+requestWebcam.prototype.getOnDownload = function () {
+    /*return the value of onDownload.*/
+    return this.onDownload;
 };
 
 requestWebcam.prototype.getData_array = function() {
@@ -68,7 +139,7 @@ requestWebcam.prototype.getBlob = function() {
     return this.blob;
 };
 
-requestWebcam.prototype.forgetPermission = function(f) {
+requestWebcam.prototype.forgetPermission = function() {
     /*
     Forget the permission given by the user to access the webcam and microphone
 
@@ -79,13 +150,13 @@ requestWebcam.prototype.forgetPermission = function(f) {
     for (var i = 0; i < this.stream.getTracks().length; i++) {
         this.stream.getTracks()[i].stop();
     }
-    if (f && typeof f === 'function'){
+    if (this.onForgetPermission && typeof this.onForgetPermission === 'function'){
         //Case we have received a function on parameter, we execute it after forgeting all permissions.
-        f();
+        this.onForgetPermission();
     }
 }
 
-requestWebcam.prototype.requestPermission = function(success, error) {
+requestWebcam.prototype.requestPermission = function() {
     /*
     Request permission from the user to access the microphone and webcam.
 
@@ -102,14 +173,14 @@ requestWebcam.prototype.requestPermission = function(success, error) {
         that.stream = stm;
         if (that.video_in) {
             /*Case we have received video_in, we display the webcam feed on the html element(<video>) with id equal to video_in.*/
-            document.getElementById(that.video_in).src = URL.createObjectURL(that.stream);
+            that.video_in.src = URL.createObjectURL(that.stream);
         }
-        if (success && typeof success === 'function') {
+        if (that.onGetPermission && typeof that.onGetPermission === 'function') {
             /*Case we have received a function on parameter, we execute it after the user grants permission.*/
-            success();
+            that.onGetPermission();
         }
     })
-    .then(null, error && typeof error === 'function' ? error : function (err) {console.log(err.name + ': ' + err.message);})
+    .then(null, that.onDeniedPermission && typeof that.onDeniedPermission === 'function' ? that.onDeniedPermission : function (err) {console.log(err.name + ': ' + err.message);})
 }
 
 requestWebcam.prototype.startRecording = function() {
@@ -125,16 +196,28 @@ requestWebcam.prototype.startRecording = function() {
     var that = this;
     if (this.browser.indexOf("Chrome") > -1) {
 
+        if (that.onStartRecording && typeof that.onStartRecording === 'function') {
+            that.onStartRecording();
+        }
+
         that.recorder = new MediaRecorder(that.stream);
         that.recorder.start();
         that.recorder.ondataavailable = function(e) {that.data_array.push(e.data)};
         
     } else if (that.browser.indexOf("Firefox") > -1 || that.browser.indexOf("Opera") > -1) {
 
+        if (that.onStartRecording && typeof that.onStartRecording === 'function') {
+            that.onStartRecording();
+        }
+
         that.recorder = new MediaRecorder(that.stream);
         that.recorder.start();
 
     } else {
+
+        if (that.onStartRecording && typeof that.onStartRecording === 'function') {
+            that.onStartRecording();
+        }
 
         that.recorder = new MediaRecorder(that.stream);
         that.recorder.start();
@@ -142,7 +225,7 @@ requestWebcam.prototype.startRecording = function() {
     }
 };
 
-requestWebcam.prototype.stopRecording = function(f) {
+requestWebcam.prototype.stopRecording = function() {
     /*
     Stop the recording of the feed.
 
@@ -163,11 +246,11 @@ requestWebcam.prototype.stopRecording = function(f) {
         that.urlobj = URL.createObjectURL(that.blob);
         if (that.video_out) {
             //In case we hava received video_out, this insert the recorded video on the element(<video>) with the id received in video_out.
-            document.getElementById(that.video_out).src = URL.createObjectURL(that.blob);
+            that.video_out.src = URL.createObjectURL(that.blob);
         }
-        if (f && typeof f === 'function') {
+        if (that.onStopRecording && typeof that.onStopRecording === 'function') {
             //This timeout is here, just to make sure we execute the function after the recorder stoped.
-            setTimeout(f(), 500);
+            setTimeout(that.onStopRecording(), 50);
         }
         that.data_array = [];
 
@@ -176,11 +259,10 @@ requestWebcam.prototype.stopRecording = function(f) {
             that.urlobj = URL.createObjectURL(e.data);
             that.blob = new Blob([e.data], {'type': 'video/mp4'});
             if (that.video_out) {
-                document.getElementById(that.video_out).src = URL.createObjectURL(e.data);
+                that.video_out.src = URL.createObjectURL(e.data);
             }
-            console.log(f);
-            if (f && typeof f === 'function') {
-                setTimeout(f(), 500);
+            if (that.onStopRecording && typeof that.onStopRecording === 'function') {
+                setTimeout(that.onStopRecording(), 50);
             }
         };
         that.recorder.stop();
@@ -191,10 +273,10 @@ requestWebcam.prototype.stopRecording = function(f) {
         that.blob = new Blob(that.data_array, {'type' : 'video/mp4'});
         that.urlobj = URL.createObjectURL(that.blob);
         if (that.video_out) {
-                document.getElementById(that.video_out).src = URL.createObjectURL(that.blob);
+                that.video_out.src = URL.createObjectURL(that.blob);
         }
-        if (f && typeof f === 'function') {
-            setTimeout(f(), 500);
+        if (that.onStopRecording && typeof that.onStopRecording === 'function') {
+            setTimeout(that.onStopRecording(), 50);
         }
         that.data_array = [];
     }
@@ -211,9 +293,12 @@ requestWebcam.prototype.download = function() {
 
     var that = this;
 
+    if (that.onDownload && typeof that.onDownload === 'function') {
+        that.onDownload();
+    }
     a = document.createElement('a');
     a.style = "display: none";
-    a.download = ['video_', (new Date() + '').slice(4, 28), '.mp4'].join('');
+    a.download = that.name;
     a.href = that.urlobj;
     a.textContent = a.download;
     document.body.appendChild(a);
@@ -221,5 +306,5 @@ requestWebcam.prototype.download = function() {
     setTimeout(function(){
         document.body.removeChild(a);
         URL.revokeObjectURL(a.href);
-    }, 900);
+    }, 200);
 };
