@@ -37,19 +37,29 @@ With requestWebcam.js:
 On your JS file is necessary to instantiate the object. Do it using this code:
 
 ```JavaScript
-webcam = new requestWebcam()
+var webcam = new requestWebcam({
+    video_in: document.getElementById( ... ),
+    video_out: document.getElementById( ... ),
+    name_video: 'Test.mp4',
+    onGetPermission: function () { ... },
+    onForgetPermission: function () { ... },
+    onDeniedPermission: function (err) { ... }
+    onStartRecording: function () { ... },
+    onStopRecording: function () { ... },
+    onDownload: function () { ... }
+})
 ```
+Meaning of the options:
 
-You can pass two parameters to this function:
-    
-    video_in: ID of the html element(<video/>) you want to display the webcam's feed.
-    Video_out: ID of the html element(<video/>) you want to display the video after recording.
-    
-The code would be something like this:
-
-```JavaScript
-webcam = new requestWebcam(video_in, video_out)
-```
+    video_in -> HTML5 video element (<video>)
+    video_out -> HTML5 video element (<video>)
+    name_video -> Name of the file on download
+    onGetPermission -> Callback function after getting permission
+    onForgetPermission -> Callback function after forgetting all permissions
+    onDeniedPermission -> Callback function if the permission is not granted
+    onStartRecording -> Function to execute on event startRecording
+    onStopRecording -> Function to execute on event stopRecording
+    onDownload -> Function to execute on event Download
 
 ## Request access to webcam
 
@@ -59,28 +69,7 @@ After creating an instance of the object, you can request access to the webcam l
 webcam.requestWebcam()
 ```
 
-You can pass two parameters to this functions:
-    
-### success
-It must be a function. This function will be called if the user grants access.
-
-### error
-It must be a function. This function will be called in case of error or in case the user does not grant permission. It can be an function like this:
-
-```JavaScript
-function() {
-    //do something
-}
-```
-Or:
-
-```JavaScript
-function(e) {
-    //do something with the error info
-}
-```
-
-After getting the permissions, if you have passed something on the paramenter video_in on the constructor, the feed will be displayed on the element with the respective ID.
+After getting the permissions, if you have passed an HTML5 video element at video_in option, the feed will be displayed in the respective element.
     
 ## Recording the feed
 
@@ -97,16 +86,7 @@ To stop the recording, you just need to call the function:
 webcam.stopRecording()
 ```
 
-This function can receive a function by parameter and execute it after stoping the recorder.
-The code would be like this:
-
-```JavaScript
-function f() {
-    //do something
-};
-webcam.stopRecording(f);
-```
-At this point, if we have passed something on the paramenter video_out on the constructor, the video recorded will be displayed on the element with the respective ID.
+At this point, if you have passed an HTML5 video element at video_out option, the feed will be displayed in the respective element.
 
 ## Download the video recorded
 
@@ -122,12 +102,4 @@ After you get access to the hardware, unless the user go to another page or relo
 
 ```JavaScript
 webcam.forgetPermission();
-```
-You can pass a function by parameter too. This function will be executed after removing all permissions the user granted before.
-
-```JavaScript
-funtion f(){
-    //do something
-}
-webcam.forgetPermission(f);
 ```
