@@ -13,7 +13,7 @@ Can be used on:
         Opera;
 
     Mobile:
-        Firefos - Android;
+        Firefox - Android;
         Google Chrome - Android;
         Default browser - Android;
         
@@ -86,7 +86,7 @@ To stop the recording, you just need to call the function:
 webcam.stopRecording()
 ```
 
-At this point, if you have passed an HTML5 video element at video_out option, the feed will be displayed in the respective element.
+At this point, if you have passed an HTML5 video element at video_out option, the video recorded will be displayed in the respective element.
 
 ## Download the video recorded
 
@@ -98,7 +98,7 @@ webcam.Download()
 
 ## Forgetting permission access
 
-After you get access to the hardware, unless the user go to another page or reload the page using the feed, the browser will keep the connection with the webcam/microphone open. This function is used to close the connection and forget the permission you got. The call is done like this:
+After you get access to the hardware, unless the user go to another page or reload the page, the browser will keep the connection with the webcam/microphone open. This function is used to close the connection and forget the permission you got. The call is done like this:
 
 ```JavaScript
 webcam.forgetPermission();
