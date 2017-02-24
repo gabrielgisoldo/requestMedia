@@ -12,21 +12,7 @@ Can be used on:
         Firefox - Android;
         Google Chrome - Android;
         Default browser - Android;
-*/
-
-var defaults = {
-    video_in: null,
-    video_out: null,
-    name: ['video_', (new Date() + '').slice(4, 28), '.mp4'].join(''),
-    onGetPermission: function () {},
-    onForgetPermission: function () {},
-    onDeniedPermission: function (err) {console.log(err.name + ': ' + err.message)},
-    onStartRecording: function () {},
-    onStopRecording: function () {},
-    onDownload: function () {}
-}
-
-/*
+  
     @example
         * var webcam = new requestWebcam({
         *   video_in: document.getElementById( ... ),
@@ -56,10 +42,21 @@ var defaults = {
 */
 
 var requestWebcam = function(opts) {
+    this.defaults = {
+        video_in: null,
+        video_out: null,
+        name: ['video_', (new Date() + '').slice(4, 28), '.mp4'].join(''),
+        onGetPermission: function () {},
+        onForgetPermission: function () {},
+        onDeniedPermission: function (err) {console.log(err.name + ': ' + err.message)},
+        onStartRecording: function () {},
+        onStopRecording: function () {},
+        onDownload: function () {}
+    }
 
     /* copy user options or use default values */
-    for (var i in defaults) {
-        this[i] = (opts[i] !== undefined) ? opts[i] : defaults[i]
+    for (var i in this.defaults) {
+        this[i] = (opts[i] !== undefined) ? opts[i] : this.defaults[i]
     }
     this.data_array = [];
     this.stream = null;
