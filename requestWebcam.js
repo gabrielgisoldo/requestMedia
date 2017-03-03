@@ -4,21 +4,23 @@ JS object to request access to the webcam and microphone of the user on the brow
 Can be used on:
     Desktop:
         Firefox;
-        Google Chrome - with experimental packages permission;
-        Chromium - with experimental packages permission;
+        Google Chrome
+        Chromium
         Opera;
 
     Mobile:
         Firefox - Android;
         Google Chrome - Android;
         Default browser - Android;
-  
+
     @example
         * var webcam = new requestWebcam({
         *   video_in: document.getElementById( ... ),
         *   video_out: document.getElementById( ... ),
         *   name_video: 'Test.mp4',
-            onGetPermission: function () { ... },
+        *   required_audio: true,
+        *   required_video: true,
+        *   onGetPermission: function () { ... },
         *   onForgetPermission: function () { ... },
         *   onDeniedPermission: function (err) { ... }
         *   onStartRecording: function () { ... },
@@ -33,6 +35,8 @@ Can be used on:
     * @param {object} options.video_in video HTML5 element to display feed
     * @param {object} options.video_out video HTML5 element to display final video
     * @param {string} options.name_video name of video on download
+    * @param {boolean} options.required_audio if true, the object forces the use of the audio track.
+    * @param {boolean} options.required_video if true, the object forces the use of the video track.
     * @param {function} [options.onGetPermission] callback when getting permission
     * @param {function} [options.onForgetPermission] Execute after deleting the permissions
     * @param {function} [options.onDeniedPermission] callback when not getting permission
@@ -46,6 +50,8 @@ var requestWebcam = function(opts) {
         video_in: null,
         video_out: null,
         name: ['video_', (new Date() + '').slice(4, 28), '.mp4'].join(''),
+        required_audio: true,
+        required_video: true,
         onGetPermission: function () {},
         onForgetPermission: function () {},
         onDeniedPermission: function (err) {console.log(err.name + ': ' + err.message)},
@@ -136,6 +142,19 @@ requestWebcam.prototype.getBlob = function() {
     return this.blob;
 };
 
+requestWebcam.prototype.getRequired_audio = function() {
+    /*return the value of Required_audio.*/
+
+    return this.required_audio;
+};
+
+requestWebcam.prototype.getRequired_video = function() {
+    /*return the value of Required_video.*/
+
+    return this.required_video;
+};
+
+
 requestWebcam.prototype.forgetPermission = function() {
     /*
     Forget the permission given by the user to access the webcam and microphone
@@ -160,21 +179,29 @@ requestWebcam.prototype.requestPermission = function() {
     Optional:
     success: Receive a function to execute after getting permission.
     error: Receive a function to execute in case of error. This function may hava a parameter to receive info on the error.
-
-    TODO: Make possible to request only video or only audio;
     */
 
     var that = this;
     navigator.mediaDevices.getUserMedia({video: true, audio: true})
     .then(function(stm) {
         that.stream = stm;
-        if (that.video_in) {
-            /*Case we have received video_in, we display the webcam feed on the html element(<video>) with id equal to video_in.*/
-            that.video_in.src = URL.createObjectURL(that.stream);
-        }
-        if (that.onGetPermission && typeof that.onGetPermission === 'function') {
-            /*Case we have received a function on parameter, we execute it after the user grants permission.*/
-            that.onGetPermission();
+        if (that.stream.getVideoTracks().length == 0 && that.required_video) {
+            /*In case it's required the use of a video device*/
+            that.onDeniedPermission({name:"Required Video", message:"No video device found."});
+            that.forgetPermission();
+        } else if (that.stream.getAudioTracks().length == 0 && that.required_audio) {
+            /*In case it's required the use of a audio device*/
+            that.onDeniedPermission({name:"Required Audio", message:"No audio device found."});
+            that.forgetPermission();
+        } else {
+            if (that.video_in) {
+                /*Case we have received video_in, we display the webcam feed on the html element(<video>) with id equal to video_in.*/
+                that.video_in.src = URL.createObjectURL(that.stream);
+            }
+            if (that.onGetPermission && typeof that.onGetPermission === 'function') {
+                /*Case we have received a function on parameter, we execute it after the user grants permission.*/
+                that.onGetPermission();
+            }
         }
     })
     .then(null, that.onDeniedPermission && typeof that.onDeniedPermission === 'function' ? that.onDeniedPermission : function (err) {console.log(err.name + ': ' + err.message);})
@@ -186,8 +213,6 @@ requestWebcam.prototype.startRecording = function() {
 
     The variable Browser is here to differentiate between Chrome and Firefox/Opera,
     because the function mediaRecorder has a different behavior on Chrome.
-
-    TODO: accept an fuction on parameters; Exception/Error Handling;
     */
 
     var that = this;
@@ -295,8 +320,6 @@ requestWebcam.prototype.download = function() {
     Download the video recorded by the feed.
 
     The first timeout is here just to make sure we have an blob on the blob variable after the recording.
-
-    TODO: Exception/Error Handling;
     */
 
     var that = this;
