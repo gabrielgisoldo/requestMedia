@@ -8,8 +8,8 @@ Can be used on:
     
     Desktop:
         Firefox;
-        Google Chrome - with experimental packages permission;
-        Chromium - with experimental packages permission;
+        Google Chrome;
+        Chromium;
         Opera;
 
     Mobile:
@@ -41,6 +41,8 @@ var webcam = new requestWebcam({
     video_in: document.getElementById( ... ),
     video_out: document.getElementById( ... ),
     name_video: 'Test.mp4',
+    required_audio: true,
+    required_video: true,
     onGetPermission: function () { ... },
     onForgetPermission: function () { ... },
     onDeniedPermission: function (err) { ... }
@@ -54,6 +56,8 @@ Meaning of the options:
     video_in -> HTML5 video element (<video>)
     video_out -> HTML5 video element (<video>)
     name_video -> Name of the file on download
+    required_audio -> If it is mandatory the use of an audio device
+    required_video -> If it is mandatory the use of a video device
     onGetPermission -> Callback function after getting permission
     onForgetPermission -> Callback function after forgetting all permissions
     onDeniedPermission -> Callback function if the permission is not granted
