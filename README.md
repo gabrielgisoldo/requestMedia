@@ -105,10 +105,10 @@ At this point, if you have passed an HTML5 (video/audio) element at feed_out opt
 To take a picture, you'll need to set and start the canvas. You can do it like this:
 
 ```JavaScript
-\\canvas -> element canvas.
+\*canvas -> element canvas.*\
 media.setCanvas(canvas);
 
-\\width -> width you want to give your canvas. We keep this proportion on this heigth = width * 9/12.
+\*width -> width you want to give your canvas. We keep a 9/12 proportion on the canvas, like this -> heigth = width * 9/12.*\
 media.startCanvas(width);
 ```
 
