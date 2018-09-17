@@ -98,7 +98,7 @@ media.stopRecording()
 
 At this point, if you have passed an HTML5 (video/audio) element at feed_out option, the file recorded will be displayed in the respective element.
 
-##Taking a picture
+## Taking a picture
 
 ### Setting the canvas
 
@@ -112,7 +112,7 @@ media.setCanvas(canvas);
 media.startCanvas(width);
 ```
 
-###Taking the picture
+### Taking the picture
 
 To take the actual picture, after setting the canvas, tou just nedd to call this function:
 
