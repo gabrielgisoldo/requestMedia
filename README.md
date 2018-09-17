@@ -1,4 +1,4 @@
-# requestWebcam
+# requestMedia
 
 ## Description
 
@@ -19,85 +19,115 @@ Can be used on:
         
 ## How to use
 
-Download the file requestWebcam.js or requestWebcam.min.js
+Download the file requestMedia.js or requestMedia.min.js
 Add this code in the html you want to use this API:
     
-With requestWebcam.min.js:
+With requestMedia.min.js:
 
 ```html
-<script src="/folder/where/the/file/is/requestWebcam.min.js" type="text/javascript"></script>
+<script src="/folder/where/the/file/is/requestMedia.min.js" type="text/javascript"></script>
 ```
     
-With requestWebcam.js:
+With requestMedia.js:
 
 ```html
-<script src="/folder/where/the/file/is/requestWebcam.js" type="text/javascript"></script>
+<script src="/folder/where/the/file/is/requestMedia.js" type="text/javascript"></script>
 ```
         
 On your JS file is necessary to instantiate the object. Do it using this code:
 
 ```JavaScript
-var webcam = new requestWebcam({
-    video_in: document.getElementById( ... ),
-    video_out: document.getElementById( ... ),
-    name_video: 'Test.mp4',
+var media = new requestMedia({
+    feed_in: document.getElementById( ... ),
+    feed_out: document.getElementById( ... ),
+    name: 'Test.mp4',
     required_audio: true,
     required_video: true,
+    file_type: 'video/mp4',
     onGetPermission: function () { ... },
     onForgetPermission: function () { ... },
     onDeniedPermission: function (err) { ... }
     onStartRecording: function () { ... },
     onStopRecording: function () { ... },
+    onPictureTaken: function () { ... },
     onDownload: function () { ... }
 })
 ```
 Meaning of the options:
 
-    video_in -> HTML5 video element (<video>)
-    video_out -> HTML5 video element (<video>)
-    name_video -> Name of the file on download
-    required_audio -> If it is mandatory the use of an audio device
-    required_video -> If it is mandatory the use of a video device
+    feed_in -> HTML5 video element (<video>\<audio>)
+    feed_out -> HTML5 video element (<video>\<audio>)
+    name -> Name of the file on download
+    file_type -> Type of file
+    required_audio -> If you want to an audio device
+    required_video -> If you want to use a video device
     onGetPermission -> Callback function after getting permission
     onForgetPermission -> Callback function after forgetting all permissions
     onDeniedPermission -> Callback function if the permission is not granted
     onStartRecording -> Function to execute on event startRecording
     onStopRecording -> Function to execute on event stopRecording
+    onPictureTaken -> Function to execute on event PictureTaken
     onDownload -> Function to execute on event Download
 
-## Request access to webcam
+## Request access to media
 
-After creating an instance of the object, you can request access to the webcam like this:
+After creating an instance of the object, you can request access to the media like this:
 
 ```JavaScript
-webcam.requestWebcam()
+media.requestPermission()
 ```
 
-After getting the permissions, if you have passed an HTML5 video element at video_in option, the feed will be displayed in the respective element.
-    
-## Recording the feed
+After getting the permissions, if you have passed an HTML5 (video/audio) element at feed_in option, the feed will be displayed in the respective element.
+
+## Recording video/audio
+
+### Recording the feed
 
 After getting permission from the user, you can record the feed. This is done using the function:
 
 ```JavaScript
-webcam.startRecording()
+media.startRecording()
 ```
-## Stop the recording
+### Stop the recording
 
 To stop the recording, you just need to call the function:
 
 ```JavaScript
-webcam.stopRecording()
+media.stopRecording()
 ```
 
-At this point, if you have passed an HTML5 video element at video_out option, the video recorded will be displayed in the respective element.
+At this point, if you have passed an HTML5 (video/audio) element at feed_out option, the file recorded will be displayed in the respective element.
 
-## Download the video recorded
+##Taking a picture
 
-You can also download the video after recording it. To do it, just use this code:
+### Setting the canvas
+
+To take a picture, you'll need to set and start the canvas. You can do it like this:
 
 ```JavaScript
-webcam.Download()
+\\canvas -> element canvas.
+media.setCanvas(canvas);
+
+\\width -> width you want to give your canvas. We keep this proportion on this heigth = width * 9/12.
+media.startCanvas(width);
+```
+
+###Taking the picture
+
+To take the actual picture, after setting the canvas, tou just nedd to call this function:
+
+```JavaScript
+media.takePicture();
+```
+
+At this point you have your picture draw to the canvas, so you can do whatever you want with it.
+
+## Download the file recorded
+
+You can also download the file after recording it. To do it, just use this code:
+
+```JavaScript
+media.Download()
 ```
 
 ## Forgetting permission access
@@ -105,5 +135,5 @@ webcam.Download()
 After you get access to the hardware, unless the user go to another page or reload the page, the browser will keep the connection with the webcam/microphone open. This function is used to close the connection and forget the permission you got. The call is done like this:
 
 ```JavaScript
-webcam.forgetPermission();
+media.forgetPermission();
 ```
