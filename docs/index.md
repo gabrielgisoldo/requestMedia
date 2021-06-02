@@ -1,4 +1,4 @@
-<script src="https://raw.githubusercontent.com/huine/requestMedia/master/requestMedia.min.js"></script>
+<script src="/requestMedia.min.js"></script>
 
 <h2 id="welcome-to-github-pages">Welcome to GitHub Pages</h2>
 
