@@ -1,37 +1,45 @@
-## Welcome to GitHub Pages
+<script src="https://raw.githubusercontent.com/huine/requestMedia/master/requestMedia.min.js"></script>
 
-You can use the [editor on GitHub](https://github.com/huine/requestMedia/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
+<h2 id="welcome-to-github-pages">Welcome to GitHub Pages</h2>
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+<p>You can use the <a href="https://github.com/huine/requestMedia/edit/gh-pages/index.md">editor on GitHub</a> to maintain and preview the content for your website in Markdown files.</p>
 
-### Markdown
+<p>Whenever you commit to this repository, GitHub Pages will run <a href="https://jekyllrb.com/">Jekyll</a> to rebuild the pages in your site, from the content in your Markdown files.</p>
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+<h3 id="markdown">Markdown</h3>
 
-```markdown
-Syntax highlighted code block
+<p>Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for</p>
 
-# Header 1
-## Header 2
-### Header 3
+<div class="language-markdown highlighter-rouge">
+    <div class="highlight">
+        <pre class="highlight">
+            <code>
+                Syntax highlighted code block
 
-- Bulleted
-- List
+                <span class="gh"># Header 1</span>
+                <span class="gu">## Header 2</span>
+                <span class="gu">### Header 3</span>
+                <span class="p">
+                -</span> Bulleted
+                <span class="p">-</span> List
+                <span class="p">
+                1.</span> Numbered
+                <span class="p">2.</span> List
 
-1. Numbered
-2. List
+                <span class="gs">**Bold**</span> and _Italic_ and <span class="sb">`Code`</span> text
 
-**Bold** and _Italic_ and `Code` text
+                <span class="p">[</span><span class="nv">Link</span><span class="p">](</span><span class="sx">url</span><span class="p">)</span> and !<span class="p">[</span><span class="nv">Image</span><span class="p">](</span><span class="sx">src</span><span class="p">)</span>
+            </code>
+        </pre>
+    </div>
+</div>
 
-[Link](url) and ![Image](src)
-```
+<p>For more details see <a href="https://guides.github.com/features/mastering-markdown/">GitHub Flavored Markdown</a>.</p>
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+<h3 id="jekyll-themes">Jekyll Themes</h3>
 
-### Jekyll Themes
+<p>Your Pages site will use the layout and styles from the Jekyll theme you have selected in your <a href="https://github.com/huine/requestMedia/settings/pages">repository settings</a>. The name of this theme is saved in the Jekyll <code class="language-plaintext highlighter-rouge">_config.yml</code> configuration file.</p>
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/huine/requestMedia/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+<h3 id="support-or-contact">Support or Contact</h3>
 
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+<p>Having trouble with Pages? Check out our <a href="https://docs.github.com/categories/github-pages-basics/">documentation</a> or <a href="https://support.github.com/contact">contact support</a> and we’ll help you sort it out.</p>
