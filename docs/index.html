@@ -10,6 +10,7 @@
 
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet"> 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.1/build/styles/an-old-hope.min.css">
         <link href="site.min.css" rel="stylesheet"> 
 
         <title>Hello, world!</title>
@@ -39,74 +40,21 @@
         <section id="body" class="body">
             <div class="container">
                 <div class="row">
-                    <p class="title-out-box">Picture</p>
-                    <div class="container border border-1 border-dark block">
-                        <div class="row h-100">
-                            <div class="col-md-auto border-end border-1 border-dark">
-                                <video class="video" muted></video>
-                            </div>
-                            <div class="col">
-                                <p class="title-in-box">Test picture</p>
-                                <p>
-                                    This is a demo to test access to a camera through the browser and take a picture with it.
-                                </p>
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-md-auto">
-                                            <button type="button" class="btn btn-md border border-dark bg-transparent text-black btn-box">Get Feed</button>
-                                        </div>
-                                        <div class="col-md-auto">
-                                            <button type="button" class="btn btn-md border border-dark bg-transparent text-black btn-box">Take Picture</button>
-                                        </div>
-                                        <div class="col-md-auto">
-                                            <button type="button" class="btn btn-md border border-dark bg-transparent text-black btn-box">Download</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <div class="row">
-                    <p class="title-out-box">Video</p>
-                    <div class="container border border-1 border-dark block">
-                        <div class="row h-100">
-                            <div class="col-md-auto border-end border-1 border-dark">
-                                <video class="video" muted></video>
-                            </div>
-                            <div class="col">
-                                <p class="title-in-box">Test video</p>
-                                <p>
-                                    This is a demo to test the access to a camera and microphone trhough the browser.<br>
-                                    You can use this to record videos for the user.
-                                </p>
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-md-auto">
-                                            <button type="button" class="btn btn-md border border-dark bg-transparent text-black btn-box">Get Feed</button>
-                                        </div>
-                                        <div class="col-md-auto">
-                                            <button type="button" class="btn btn-md border border-dark bg-transparent text-black btn-box">Start Recording</button>
-                                        </div>
-                                        <div class="col-md-auto">
-                                            <button type="button" class="btn btn-md border border-dark bg-transparent text-black btn-box">Stop Recording</button>
-                                        </div>
-                                        <div class="col-md-auto">
-                                            <button type="button" class="btn btn-md border border-dark bg-transparent text-black btn-box">Download</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col">
+                        <pre>
+                            <code class="language-html">
+                                &lt;script type="text/javascript"&gt;&lt;/script&gt;
+                            </code>
+                        </pre>
                     </div>
                 </div>
             </div>
         </section>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.1/build/highlight.min.js"></script>
         <script src="requestMedia.min.js"></script>
+
+        <script>hljs.initHighlightingOnLoad();</script>
     </body>
 </html>
