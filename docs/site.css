@@ -37,6 +37,11 @@
     flex-wrap: wrap;
 }
 
+.video-container > video{
+    max-width: 90%;
+    height: auto;
+}
+
 .title-out-box{
     font-size: 1.7rem;
     font-weight: 600;
