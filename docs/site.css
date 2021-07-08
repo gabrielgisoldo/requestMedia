@@ -9,6 +9,10 @@
     height: 10cm;
 }
 
+.header-title{
+    height: 65% !important;
+}
+
 .center{
     text-align: center;
 }
@@ -23,14 +27,14 @@
     word-wrap: break-word;
 }
 
-.block{
-    height: 200px;
+.center-div{
+    justify-content: center;
 }
 
-.video{
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+.video-container{
+    justify-content: space-evenly;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .title-out-box{
@@ -52,4 +56,13 @@
 
 .btn-box:focus{
     box-shadow: none !important;
+}
+
+.btn-control, .video-margin{
+    margin: 5px;
+}
+
+.block{
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
