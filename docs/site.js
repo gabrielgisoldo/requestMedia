@@ -7,7 +7,8 @@ var DownloadVideo = document.getElementById('DownloadVideo');
 
 var demoVideo = new requestMedia({
     preview: preview_video,
-    output: output_video
+    output: output_video,
+    video: {width: 640, height: 480}
 });
 
 getFeedVideo.addEventListener('click', function(event){
